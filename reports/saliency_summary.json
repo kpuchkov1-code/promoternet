@@ -1,0 +1,41 @@
+{
+  "top_attended_positions": [
+    87,
+    89,
+    108,
+    109,
+    113
+  ],
+  "max_position_saliency": 0.2963741421699524,
+  "n_filters_extracted": 128,
+  "motif_matches": {
+    "-10 box (TATAAT)": [
+      {
+        "filter": 55,
+        "score": 0.9081
+      },
+      {
+        "filter": 54,
+        "score": 0.8794
+      },
+      {
+        "filter": 4,
+        "score": 0.8455
+      }
+    ],
+    "-35 box (TTGACA)": [
+      {
+        "filter": 37,
+        "score": 0.821
+      },
+      {
+        "filter": 18,
+        "score": 0.7976
+      },
+      {
+        "filter": 63,
+        "score": 0.7975
+      }
+    ]
+  }
+}

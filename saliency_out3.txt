@@ -1,0 +1,62 @@
+Windows fatal exception: access violation
+
+Current thread 0x0000a22c (most recent call first):
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 1293 in create_module
+  File "<frozen importlib._bootstrap>", line 813 in module_from_spec
+  File "<frozen importlib._bootstrap>", line 921 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "C:\Users\Kirill\promoternet\.venv\Lib\site-packages\pyarrow\__init__.py", line 71 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 999 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "C:\Users\Kirill\promoternet\.venv\Lib\site-packages\pandas\compat\pyarrow.py", line 12 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 999 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "C:\Users\Kirill\promoternet\.venv\Lib\site-packages\pandas\compat\__init__.py", line 28 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 999 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "C:\Users\Kirill\promoternet\.venv\Lib\site-packages\pandas\__init__.py", line 34 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 999 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "C:\Users\Kirill\promoternet\src\promoternet\data.py", line 15 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 999 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "C:\Users\Kirill\promoternet\scripts\saliency_analysis.py", line 22 in <module>
+device: cuda
+Windows fatal exception: access violation
+
+Current thread 0x0000a22c (most recent call first):
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 1301 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "C:\Users\Kirill\promoternet\.venv\Lib\site-packages\pyarrow\dataset.py", line 24 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 999 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "C:\Users\Kirill\promoternet\.venv\Lib\site-packages\pyarrow\parquet\core.py", line 1393 in __init__
+  File "C:\Users\Kirill\promoternet\.venv\Lib\site-packages\pyarrow\parquet\core.py", line 1891 in read_table
+  File "C:\Users\Kirill\promoternet\.venv\Lib\site-packages\pandas\io\parquet.py", line 260 in read
+  File "C:\Users\Kirill\promoternet\.venv\Lib\site-packages\pandas\io\parquet.py", line 671 in read_parquet
+  File "C:\Users\Kirill\promoternet\src\promoternet\data.py", line 193 in load_cached
+  File "C:\Users\Kirill\promoternet\scripts\saliency_analysis.py", line 47 in main
+  File "C:\Users\Kirill\promoternet\scripts\saliency_analysis.py", line 124 in <module>

@@ -1,0 +1,21 @@
+device: cuda
+loaded 10,898 rows  (test=1,090)
+loaded checkpoint: cnn_random_8_1_1.pt
+computing saliency on top-200 test promoters ...
+saved: C:\Users\Kirill\promoternet\reports\figures\saliency_position_importance.png
+  top-5 attended positions: [87, 89, 108, 109, 113]
+
+extracting conv-1 filter motifs (this scans all training-style activations)...
+  recovered 128 filter PWMs (kernel size = 12)
+
+-10 box (TATAAT):
+  filter  55  cosine=0.908  consensus=CAAGTATAATTA
+  filter  54  cosine=0.879  consensus=AAATATATTGGT
+  filter   4  cosine=0.845  consensus=AAAAATACTGGC
+
+-35 box (TTGACA):
+  filter  37  cosine=0.821  consensus=ATGTACTTGTCA
+  filter  18  cosine=0.798  consensus=TACCGTGACACT
+  filter  63  cosine=0.798  consensus=TTATGTTGAAAT
+
+summary written to: C:\Users\Kirill\promoternet\reports\saliency_summary.json
