@@ -195,6 +195,8 @@ def make_generalization_bar() -> None:
     print("\n[generalization_bar.png]")
     baselines = json.loads((REPORTS_DIR / "baselines_results.json").read_text())
     cnn = json.loads((REPORTS_DIR / "cnn_results.json").read_text())
+    nt_path = REPORTS_DIR / "nt_results.json"
+    nt = json.loads(nt_path.read_text()) if nt_path.exists() else None
 
     splits = ["random_8_1_1", "leave_spacer_out", "leave_m10_out"]
     split_labels = ["Random 80/10/10", "Leave-spacer-out", "Leave-m10-out"]
@@ -203,9 +205,11 @@ def make_generalization_bar() -> None:
         ("k-mer + XGBoost", "kmer_xgb", RUST),
         ("PromoterNet CNN", "cnn", NAVY),
     ]
+    if nt is not None:
+        models.append(("DNABERT-6 fine-tune", "nt", "#2e7d32"))
 
     x = np.arange(len(splits))
-    width = 0.26
+    width = 0.85 / len(models)
     fig, ax = plt.subplots(figsize=(9, 4.0))
     fig.patch.set_facecolor(CREAM)
     ax.set_facecolor(CREAM)
@@ -215,9 +219,11 @@ def make_generalization_bar() -> None:
         for s in splits:
             if key == "cnn":
                 values.append(float(cnn[s]["cnn"]["r2"]))
+            elif key == "nt" and nt is not None:
+                values.append(float(nt[s]["nt"]["r2"]))
             else:
                 values.append(float(baselines[s][key]["r2"]))
-        offset = (i - 1) * width
+        offset = (i - (len(models) - 1) / 2) * width
         bars = ax.bar(x + offset, values, width, label=label, color=color, edgecolor=SLATE, lw=0.4)
         for bar, v in zip(bars, values, strict=False):
             ax.text(

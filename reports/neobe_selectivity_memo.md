@@ -11,11 +11,12 @@
 
 `PromoterNet` — a sequence-to-strength regression model trained on the Urtecho et al 2019 σ70 promoter library (10,898 variants from a combinatorial design spanning 8 -35 elements, 8 spacers, 8 -10 elements, 3 UP elements, 8 backgrounds). Source, tests, figures, and reproducibility instructions are in the project repo. ~5 days of focused work.
 
-Three model classes benchmarked:
+Four model classes benchmarked:
 
 1. **PWM Ridge** — mechanistic baseline scoring the canonical -10 (TATAAT) and -35 (TTGACA) motifs.
 2. **k-mer + XGBoost** — 4,160 k-mer features, gradient-boosted trees with early stopping.
 3. **PromoterNet CNN** — DeepBind/Basset-style 1D CNN, 130k parameters, batch-norm + dropout.
+4. **DNABERT-6 fine-tune** — 89M-parameter pretrained DNA BERT, regression head + backbone fine-tune in fp16.
 
 Three evaluation regimes:
 
@@ -25,17 +26,19 @@ Three evaluation regimes:
 
 ## What the result actually means for the platform
 
-| Split | PWM | k-mer XGB | CNN |
-|---|---|---|---|
-| Random | 0.18 | **0.96** | **0.95** |
-| Leave-spacer-out | 0.23 | 0.85 | 0.87 |
-| Leave-m10-out | 0.13 | **0.23** | **0.67** |
+| Split | PWM | k-mer XGB | CNN | DNABERT-6 |
+|---|---|---|---|---|
+| Random | 0.18 | **0.96** | **0.95** | **0.95** |
+| Leave-spacer-out | 0.23 | 0.85 | 0.87 | **0.87** |
+| Leave-m10-out | 0.13 | **0.23** | **0.67** | 0.12 |
 
-(R² on test set, Urtecho 2019.)
+(R² on test set, Urtecho 2019. Spearman on leave-m10-out: PWM 0.34, k-mer 0.67, CNN 0.84, DNABERT-6 0.73.)
 
-The interesting line is the third. The k-mer model that scored 0.96 on a random split collapses to 0.23 when forced to predict for a -10 pattern it has never seen — it was memorizing -10 identity, not learning σ70 grammar. The CNN holds at 0.67 (Spearman 0.84) because it learns positional attention over the -35 / -10 regions. Convolutional filters in the first layer recover TATAAT and TTGACA-class consensus motifs without supervision.
+Two findings worth Pedro's attention:
 
-If Neobe's promoter design tooling has only been validated on random splits of internal data, the same memorization problem is almost certainly hiding in your numbers. It only matters when you push a design that diverges from your training distribution — which is exactly when in-silico tools need to be trustworthy.
+**The k-mer trap.** The k-mer model that scored 0.96 on a random split collapses to 0.23 when forced to predict for a -10 pattern it has never seen — it was memorizing -10 identity, not learning σ70 grammar. The CNN holds at 0.67 (Spearman 0.84) because it learns positional attention over the -35 / -10 regions. Convolutional filters in the first layer recover TATAAT and TTGACA-class consensus motifs without supervision. *If Neobe's promoter design tooling has only been validated on random splits of internal data, this memorization problem is almost certainly hiding in your numbers.*
+
+**Foundation models give cheap ranking but biased calibration.** DNABERT-6 (89M-param BERT pretrained on multi-species DNA) matches CNN/k-mer on the easy splits and *exceeds* both on Spearman ranking on leave-spacer-out. But on leave-m10-out it collapses to R²=0.12 while keeping Spearman at 0.73 — it ranks promoters correctly but predicts the wrong absolute log-expression by a constant offset. The pretrained priors do not perfectly transfer to E. coli σ70 context, and a regression-head fine-tune cannot fully correct the bias on ~9k examples. **For ranking-mode applications ("give me the top 20 candidates"), DNABERT-6 is fine. For calibration-mode applications ("predict absolute ON/OFF dynamic range to budget IND-grade leakage"), the small purpose-built CNN is the right model.** Knowing *when* to reach for a foundation model versus a small domain model is the practical question for biotech ML adoption — and the answer at IND scale leans toward the small model trained on your own characterization data.
 
 ## What selectivity actually means at IND
 

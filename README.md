@@ -11,7 +11,7 @@ The motivating application is **tumor-selective expression** of payloads in engi
    - Höllerer et al 2020 Nat Comm — synthetic promoter library, MPRA.
    - LaFleur et al 2022 Nat Comm — Salis lab in-vivo promoter calculator data.
 2. **Features.** Position weight matrix (PWM) on σ70 -10 / -35 motifs; k-mer counts (k=4,5,6); one-hot encoding for the CNN; BPE tokens for DNABERT-2.
-3. **Models.** PWM regression baseline, gradient-boosted k-mer regression (XGBoost), DeepBind-style 1D CNN, DNABERT-2 fine-tune with a regression head.
+3. **Models.** PWM regression baseline, gradient-boosted k-mer regression (XGBoost), DeepBind-style 1D CNN, DNABERT-6 fine-tune with a regression head.
 4. **Evaluation.**
    - Random 80/10/10 split — table-stakes.
    - **Leave-library-out** — train on Kosuri, evaluate on Höllerer / LaFleur. Tests whether the model learned σ70 transcription rather than memorized one library's sequence biases.
@@ -61,10 +61,13 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -e ".[dev]"
 python scripts\download_data.py
+python scripts\process_urtecho.py
 python scripts\run_baselines.py
 python scripts\train_cnn.py
 python scripts\train_dnabert.py
-python scripts\leave_library_out_eval.py
+python scripts\saliency_analysis.py
+python scripts\make_figures.py
+pytest tests/
 ```
 
 ## Citations
@@ -73,4 +76,4 @@ python scripts\leave_library_out_eval.py
 - Höllerer S, Papaxanthos L, Gumpinger AC, Fischer K, Beisel C, Borgwardt K, Benenson Y, Jeschek M. *Large-scale DNA-based phenotypic recording and deep learning enable highly accurate sequence-function mapping.* Nat Commun 11: 3551, 2020.
 - LaFleur TL, Hossain A, Salis HM. *Automated model-predictive design of synthetic promoters to control transcriptional profiles in bacteria.* Nat Commun 13: 5159, 2022.
 - Vaishnav ED et al. *The evolution, evolvability and engineering of gene regulatory DNA.* Nature 603: 455–463, 2022.
-- Zhou Z, et al. *DNABERT-2: Efficient Foundation Model and Benchmark For Multi-Species Genome.* ICLR 2024.
+- Ji Y, Zhou Z, Liu H, Davuluri RV. *DNABERT: pre-trained Bidirectional Encoder Representations from Transformers model for DNA-language in genome.* Bioinformatics 37(15): 2112–2120, 2021.
