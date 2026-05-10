@@ -43,3 +43,8 @@ Thumbs.db
 .coverage
 htmlcov/
 .pytest_cache/
+
+# stray debug logs
+saliency_out*.txt
+figures_out*.txt
+
