@@ -59,7 +59,7 @@ Convolutional filters in the first layer rediscover the canonical σ70 motifs wi
 ## Reproducibility
 
 ```powershell
-cd C:\Users\Kirill\promoternet
+cd promoternet
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -e ".[dev]"

@@ -1,4 +1,4 @@
-"""Generate the figures used in the Neobe interview deck.
+"""Generate the benchmark figures (generalization, calibration, motif logos, saliency).
 
 Outputs (PNG, 160 dpi):
   1. saliency_position_importance.png   (already produced by saliency_analysis.py)

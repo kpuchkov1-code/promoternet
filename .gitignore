@@ -48,3 +48,6 @@ htmlcov/
 saliency_out*.txt
 figures_out*.txt
 
+
+# Private local-only notes/memos (kept local, not published)
+*.local.md

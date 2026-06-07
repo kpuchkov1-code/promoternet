@@ -5,11 +5,10 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "promoternet"
 version = "0.1.0"
-description = "Bacterial promoter strength prediction with PWM, XGBoost, CNN, and DNABERT-2."
+description = "Bacterial promoter strength prediction with PWM, XGBoost, CNN, and DNABERT-6."
 readme = "README.md"
 requires-python = ">=3.10,<3.13"
 license = { text = "MIT" }
-authors = [{ name = "Kirill Puchkov" }]
 dependencies = [
     "numpy>=1.26",
     "pandas>=2.2",
