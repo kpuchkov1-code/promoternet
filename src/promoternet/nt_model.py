@@ -3,7 +3,7 @@
 DNABERT-2-117M's Mosaic-BERT architecture depends on Triton/flash-attn kernels
 that don't have a clean Windows build, and Nucleotide Transformer v2's bundled
 config breaks against transformers >= 5.x. DNABERT-6 from the same Zhihan
-Zhou / Liu lab uses standard ``transformers.BertModel`` — same lineage, but it
+Zhou / Liu lab uses standard ``transformers.BertModel``, same lineage, but it
 works on the RTX 3070 Laptop's 8 GB VRAM with no hacks.
 """
 

@@ -1,18 +1,18 @@
 # PromoterNet
 
-ML benchmark that predicts *E. coli* σ70 promoter strength from a 150 bp sequence, comparing PWM, k-mer + XGBoost, a 1D CNN, and a DNABERT-6 fine-tune — with an emphasis on **generalization to held-out promoter elements**, not just random-split accuracy.
+An ML benchmark for predicting *E. coli* σ70 promoter strength from a 150 bp sequence, comparing PWM, k-mer + XGBoost, a 1D CNN, and a DNABERT-6 fine-tune. The focus is a question that ordinary random-split accuracy hides: **how well does each model generalize to promoter elements it never saw in training?**
 
-The motivating application is **tumor-selective expression** of payloads in engineered live biotherapeutic products (LBPs). Live bacterial cancer therapies require payload expression to be high inside the tumor and silent in healthy tissue — a selectivity problem solved with sensor-driven promoter circuits whose dynamic range is the IND-critical safety parameter. A sequence-to-strength model that generalizes to *new* promoter elements (rather than memorizing characterized ones) reduces the wet-lab combinatorics of designing those circuits.
+Predicting how strongly a promoter drives transcription, directly from sequence, is a core problem in synthetic biology: it lets you design and reuse regulatory parts with predictable expression instead of screening large libraries in the lab. A model that only works when it has already seen every part is of little use for design, so this project measures the gap between in-distribution accuracy and true generalization, and asks which model class closes it.
 
 ## Approach
 
-1. **Dataset.** Urtecho et al 2019 (*Biochemistry*) — 10,898 σ70 promoter variants from a combinatorial library (3 UP × 8 -35 × 8 spacers × 8 -10 × 8 backgrounds), all exactly 150 bp, expression measured by RNA-seq / DNA-seq ratio. Publicly hosted at `github.com/KosuriLab`.
+1. **Dataset.** Urtecho et al 2019 (*Biochemistry*), 10,898 σ70 promoter variants from a combinatorial library (3 UP x 8 -35 x 8 spacers x 8 -10 x 8 backgrounds), all exactly 150 bp, expression measured by RNA-seq / DNA-seq ratio. Publicly hosted at `github.com/KosuriLab`.
 2. **Features.** Position weight matrix (PWM) on the σ70 -10 / -35 motifs; k-mer counts (k = 4, 5, 6); one-hot encoding for the CNN; overlapping 6-mer tokens for DNABERT-6.
 3. **Models.** PWM Ridge baseline, gradient-boosted k-mer regression (XGBoost), DeepBind/Basset-style 1D CNN, and a DNABERT-6 fine-tune with a regression head.
-4. **Evaluation — three split regimes:**
-   - **Random 80/10/10** — table-stakes.
-   - **Leave-spacer-out** — an entire spacer class held out of training.
-   - **Leave-m10-out** — an entire -10 mutation pattern held out of training. *This is the deployment-relevant test:* a design tool must extrapolate to elements it has never characterized.
+4. **Evaluation, three split regimes:**
+   - **Random 80/10/10**, table-stakes.
+   - **Leave-spacer-out**, an entire spacer class held out of training.
+   - **Leave-m10-out**, an entire -10 mutation pattern held out of training. This is the generalization-relevant test: the model must extrapolate to an element it has never seen.
 5. **Interpretability.** Gradient saliency on the trained CNN aggregated across high-expression promoters, plus first-layer convolutional filter analysis, confirming unsupervised rediscovery of the canonical -10 (`TATAAT`) and -35 (`TTGACA`) boxes.
 
 ## Headline findings
@@ -25,9 +25,9 @@ The motivating application is **tumor-selective expression** of payloads in engi
 
 *(test R² on Urtecho 2019. Full table incl. Spearman in [`reports/results_table.md`](reports/results_table.md).)*
 
-1. **The k-mer trap.** The k-mer model scores 0.96 on a random split but collapses to 0.23 when forced to predict for a -10 element it has never seen — it was memorizing element *identity*, not learning σ70 *grammar*.
+1. **The k-mer trap.** The k-mer model scores 0.96 on a random split but collapses to 0.23 when forced to predict for a -10 element it has never seen. It was memorizing element *identity*, not learning σ70 *grammar*.
 2. **The CNN closes the gap.** It holds at R²=0.67 (Spearman 0.84) on leave-m10-out because its filters learn positional patterns over the -35 / -10 regions. Those filters rediscover `TATAAT` and `TTGACA` without supervision.
-3. **Foundation model: cheap ranking, biased calibration.** DNABERT-6 ranks well (Spearman 0.73 on leave-m10-out) but its absolute R² collapses to 0.12 — pretrained priors don't transfer cleanly to *E. coli* σ70 context. **Use a foundation model for ranking; use a small purpose-built model when absolute calibration matters.**
+3. **Foundation model: cheap ranking, biased calibration.** DNABERT-6 ranks well (Spearman 0.73 on leave-m10-out) but its absolute R² collapses to 0.12. Pretrained priors do not transfer cleanly to *E. coli* σ70 context. The practical takeaway: use a foundation model when you only need to rank candidates, and a small purpose-built model when you need trustworthy absolute predictions.
 
 ## Repository layout
 
@@ -55,7 +55,8 @@ promoternet/
 │   ├── train_dnabert.py              DNABERT-6 fine-tune entry point
 │   ├── saliency_analysis.py           saliency + motif rediscovery
 │   └── make_figures.py                generate all benchmark figures
-├── notebooks/                         EDA + analysis notebooks
+├── notebooks/
+│   └── 01_walkthrough.ipynb           executed end-to-end guided tour
 ├── tests/                             pytest unit tests
 └── reports/
     ├── results_table.md               final benchmark table
@@ -80,10 +81,10 @@ python scripts\make_figures.py
 pytest tests/
 ```
 
-Hardware used: NVIDIA RTX 3070 Laptop (8 GB VRAM). CNN trains in ~10 s/run; DNABERT-6 fine-tune ~7–40 min/split.
+Hardware used: NVIDIA RTX 3070 Laptop (8 GB VRAM). CNN trains in ~10 s/run; DNABERT-6 fine-tune ~7 to 40 min/split.
 
 ## Citations
 
-- Urtecho G, Tripp AD, Insigne KD, Kim H, Kosuri S. *Systematic Dissection of Sequence Elements Controlling σ70 Promoters Using a Genomically Encoded Multiplexed Reporter Assay in Escherichia coli.* Biochemistry 58(11): 1539–1551, 2019.
-- Ji Y, Zhou Z, Liu H, Davuluri RV. *DNABERT: pre-trained Bidirectional Encoder Representations from Transformers model for DNA-language in genome.* Bioinformatics 37(15): 2112–2120, 2021.
-- Alipanahi B, Delong A, Weirauch MT, Frey BJ. *Predicting the sequence specificities of DNA- and RNA-binding proteins by deep learning (DeepBind).* Nat Biotechnol 33: 831–838, 2015.
+- Urtecho G, Tripp AD, Insigne KD, Kim H, Kosuri S. *Systematic Dissection of Sequence Elements Controlling σ70 Promoters Using a Genomically Encoded Multiplexed Reporter Assay in Escherichia coli.* Biochemistry 58(11): 1539-1551, 2019.
+- Ji Y, Zhou Z, Liu H, Davuluri RV. *DNABERT: pre-trained Bidirectional Encoder Representations from Transformers model for DNA-language in genome.* Bioinformatics 37(15): 2112-2120, 2021.
+- Alipanahi B, Delong A, Weirauch MT, Frey BJ. *Predicting the sequence specificities of DNA- and RNA-binding proteins by deep learning (DeepBind).* Nat Biotechnol 33: 831-838, 2015.

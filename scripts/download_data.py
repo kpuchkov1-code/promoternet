@@ -1,11 +1,11 @@
 """Download bacterial promoter datasets used to train and evaluate PromoterNet.
 
-Primary dataset: Urtecho et al 2019 (Biochemistry) — 10,898 σ70 promoter variants
-from a combinatorial library (8 × -35 × 8 × -10 × 3 UP × 8 spacers × 8 backgrounds).
+Primary dataset: Urtecho et al 2019 (Biochemistry): 10,898 σ70 promoter variants
+from a combinatorial library (8 x -35 x 8 x -10 x 3 UP x 8 spacers x 8 backgrounds).
 Hosted publicly on the Kosuri Lab GitHub at
-https://github.com/KosuriLab/ecoli_minimal_promoter — no auth required.
+https://github.com/KosuriLab/ecoli_minimal_promoter (no auth required).
 
-Stretch dataset: Kosuri et al 2013 PNAS — 12,563 promoter+RBS combinations.
+Stretch dataset: Kosuri et al 2013 PNAS, 12,563 promoter+RBS combinations.
 Supplementary tables hosted on the PNAS website. May require manual download
 because PNAS has anti-bot protection on supplementary file downloads.
 """

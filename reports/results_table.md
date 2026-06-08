@@ -1,4 +1,4 @@
-# PromoterNet — benchmark results
+# PromoterNet: benchmark results
 
 Dataset: Urtecho et al 2019 (Biochemistry), 10,898 σ70 promoter variants from a combinatorial library spanning 3 UP elements × 8 -35 elements × 8 spacers × 8 -10 elements × 8 backgrounds. Expression measured by RNA-seq / DNA-seq ratio in MOPS + glucose, reported per-variant as `RNA_exp_average`. Target = log₁₀(RNA_exp_average).
 
@@ -37,11 +37,11 @@ DNABERT-6 model: `zhihan1996/DNA_bert_6` (Ji et al 2021, *Bioinformatics*) loade
 
 **2. The CNN closes the generalization gap.** On the same leave-m10-out test, the purpose-built 1D CNN holds at R²=0.67 (Spearman 0.84) because it has learned positional attention over the -35 / -10 regions rather than memorizing element identity. Convolutional filters in the first layer recover the canonical TATAAT and TTGACA motifs without supervision (cosine similarity 0.91 / 0.82 against consensus).
 
-**3. Foundation models give cheap ranking but biased calibration.** DNABERT-6 fine-tune matches CNN/k-mer on the easy splits (R²=0.95, 0.87) and *exceeds* both on Spearman for leave-spacer-out (0.73). But on leave-m10-out, DNABERT-6 collapses to R²=0.12 while keeping Spearman at 0.73 — meaning it ranks promoters correctly but predicts the wrong absolute log-expression by a constant offset. The pretrained priors do not perfectly transfer to E. coli σ70 promoter context, and 6 epochs of regression-head training cannot fully correct the bias. **For ranking-mode applications (\"give me the top 20 candidates\"), DNABERT-6 is fine. For calibration-mode applications (\"predict the absolute ON/OFF dynamic range so we can budget IND-grade leakage\"), the small purpose-built CNN is the right model.**
+**3. Foundation models give cheap ranking but biased calibration.** DNABERT-6 fine-tune matches CNN/k-mer on the easy splits (R²=0.95, 0.87) and *exceeds* both on Spearman for leave-spacer-out (0.73). But on leave-m10-out, DNABERT-6 collapses to R²=0.12 while keeping Spearman at 0.73, meaning it ranks promoters correctly but predicts the wrong absolute log-expression by a constant offset. The pretrained priors do not perfectly transfer to E. coli σ70 promoter context, and 6 epochs of regression-head training cannot fully correct the bias. **When you only need to rank candidates (\"give me the top 20\"), DNABERT-6 is fine. When you need trustworthy absolute predictions, the small purpose-built CNN is the right model.**
 
-This finding is the most useful from a deployment perspective — knowing *when* to reach for a foundation model vs a small purpose-built model is the practical question for any biotech ML adoption.
+This finding is the most useful in practice: knowing *when* to reach for a foundation model versus a small purpose-built model is the central question for applying ML to sequence-function prediction.
 
-## Interpretability — sigma70 motif rediscovery
+## Interpretability: sigma70 motif rediscovery
 
 Gradient saliency on the top-200 highest-expression test promoters concentrates at positions {87, 89} and {108, 109, 113}, corresponding to the -35 box and -10 box positions in the Urtecho library design.
 

@@ -3,7 +3,7 @@
 DNABERT-2-117M's Mosaic-BERT requires Triton/flash-attn that don't build cleanly
 on Windows; Nucleotide Transformer v2's bundled config breaks against
 transformers >= 5.x. DNABERT-6 (Ji, Zhou et al, same lab as DNABERT-2) uses
-standard transformers BertModel — drops in cleanly, fits in 8 GB VRAM with
+standard transformers BertModel that drops in cleanly, fits in 8 GB VRAM with
 batch=16 + AMP, and is the natural foundation-model baseline for prokaryotic
 sequences on this hardware.
 """

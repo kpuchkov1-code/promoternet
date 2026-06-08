@@ -1,6 +1,6 @@
 """Data loaders for bacterial promoter MPRA datasets.
 
-Primary dataset: Urtecho et al 2019 — combinatorial σ70 promoter library.
+Primary dataset: Urtecho et al 2019, combinatorial σ70 promoter library.
 Each variant is composed from discrete element classes, which we parse out of
 the name field so we can build leave-element-out generalization splits.
 """
@@ -155,7 +155,7 @@ def leave_element_out_split(
     """Train on all variants except those matching holdout_value in element_col.
 
     If holdout_value is None, picks the largest element class as the holdout
-    (most rigorous test — "model has never seen this element").
+    (most rigorous test: "model has never seen this element").
     """
     if element_col not in df.columns:
         raise KeyError(f"element_col {element_col!r} not in df.columns={list(df.columns)}")

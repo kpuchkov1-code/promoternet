@@ -87,7 +87,7 @@ def make_motif_logos(device: str) -> None:
                 font_name="DejaVu Sans Mono",
             )
             ax.set_title(
-                f"{name} — filter {f_idx}  (cosine = {score:.2f})",
+                f"{name}: filter {f_idx}  (cosine = {score:.2f})",
                 fontsize=10,
                 color=SLATE,
             )
@@ -163,7 +163,7 @@ def make_calibration_plots(device: str) -> None:
         ax,
         splits_random["test"]["log_expression"].to_numpy(),
         pred_random,
-        "Random split — held-out test set",
+        "Random split, held-out test set",
     )
     fig.tight_layout()
     out = FIG_DIR / "calibration_random.png"
@@ -182,7 +182,7 @@ def make_calibration_plots(device: str) -> None:
         ax,
         splits_lm10["test"]["log_expression"].to_numpy(),
         pred_lm10,
-        f"Leave-element-out — never-seen -10 pattern: {splits_lm10['holdout_value']!r}",
+        f"Leave-element-out, never-seen -10 pattern: {splits_lm10['holdout_value']!r}",
     )
     fig.tight_layout()
     out = FIG_DIR / "calibration_lm10.png"
